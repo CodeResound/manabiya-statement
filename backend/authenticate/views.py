@@ -16,7 +16,7 @@ from .models import Users
 
 from .serializers import (
     LoginSerializer,
-    UsersSerializer
+    UsersSerializer,
 )
 
 class UsersView(viewsets.ModelViewSet):
