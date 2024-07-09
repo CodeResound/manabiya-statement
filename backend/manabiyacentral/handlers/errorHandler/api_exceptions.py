@@ -116,3 +116,10 @@ class NotFound(BaseCustomException):
         detail = detail or "Record Not Found"
         code = code or status.HTTP_404_NOT_FOUND
         super().__init__(detail, code)
+
+
+class TokenBackendError(BaseCustomException):
+    def __init__(self, detail=None, code=None):
+        detail = detail or "Token Backend Error. Please Contact Support."
+        code = code or status.HTTP_500_INTERNAL_SERVER_ERROR
+        super().__init__(detail, code)

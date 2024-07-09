@@ -7,7 +7,8 @@ class Sanitize:
     @staticmethod
     def create_statement(request):
         expected_fields = [
-            'folder_name',
+            'folder_name1',
+            'folder_name2',
             'file_name',
             'template_json',
             'type',
@@ -34,7 +35,8 @@ class Sanitize:
     @staticmethod
     def create_wodadoc(request):
         expected_fields = [
-            'folder_name',
+            'folder_name1',
+            'folder_name2',
             'file_name',
             'template_json',
             'type',

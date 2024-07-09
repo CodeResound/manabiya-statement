@@ -12,7 +12,12 @@ class StatementsSerializer(serializers.ModelSerializer):
 
 
 class StatementFolderCountSerializer(serializers.Serializer):
-    folder_name = serializers.CharField()
+    folder_name1 = serializers.CharField()
+    count = serializers.IntegerField()
+
+
+class StatementFolder2CountSerializer(serializers.Serializer):
+    folder_name2 = serializers.CharField()
     count = serializers.IntegerField()
 
 
@@ -29,7 +34,12 @@ class WodaDocSerializer(serializers.ModelSerializer):
 
         
 class WodaFolderCountSerializer(serializers.Serializer):
-    folder_name = serializers.CharField()
+    folder_name1 = serializers.CharField()
+    count = serializers.IntegerField()
+
+
+class WodaFolder2CountSerializer(serializers.Serializer):
+    folder_name2 = serializers.CharField()
     count = serializers.IntegerField()
 
 
