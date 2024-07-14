@@ -1,3 +1,4 @@
+from typing import Any
 import uuid
 from django.db import models
 from manabiyacentral.models import DateTimeModel
@@ -14,11 +15,13 @@ class Users(DateTimeModel):
     ipv6 = models.CharField(max_length=40, blank=True, null=True)
     mac = models.CharField(max_length=17, blank=True, null=True)
     cooldown_time = models.DateTimeField(blank=True, null=True)
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(db_default=True, default=True, blank=True)
     status_reason = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         db_table = 'users'
 
-
-
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        if not self.status:
+            self.status = True

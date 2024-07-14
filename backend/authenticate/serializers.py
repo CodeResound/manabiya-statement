@@ -12,13 +12,12 @@ class UsersSerializer(serializers.ModelSerializer):
             hasher = Argon2()
             hashed_password = hasher.hash_password(password=value)
             return hashed_password
-        return serializers.ValidationError({'password':'Password Must Be of 1 Letter, 1 Number and 1 Special Characters'})
+        raise serializers.ValidationError({'password':'Password Must Be of 1 Letter, 1 Number and 1 Special Characters'})
     
     class Meta:
         model = Users
         fields = '__all__'
     
-
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)

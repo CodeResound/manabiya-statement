@@ -19,6 +19,8 @@ from .serializers import (
     UsersSerializer,
 )
 
+from .backend import TokenBackend
+
 class UsersView(viewsets.ModelViewSet):
     queryset = Users.objects.all()
     serializer_class = UsersSerializer
@@ -60,9 +62,20 @@ class Login(APIView):
             
             if (login_attempts + 1) > 9:
                 user.status = False
-            
             user.save()
             raise LoginException('Unable to Login. Invalid Credentials.')
         
-        
+        token = TokenBackend()
+        payload = {
+            'user_id': str(user.id),
+            'name' : user.name
+        }
 
+        access_token = token.encode(payload,'access')
+        refresh_token = token.encode(payload,'refresh')
+
+        response = Response({'access_token':access_token,'message':'Login Successful'}, status=status.HTTP_200_OK)
+        response.set_cookie('refresh_token', refresh_token, httponly=True, secure=False)
+        return response
+        
+        
