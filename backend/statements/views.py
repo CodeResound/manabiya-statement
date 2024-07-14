@@ -12,7 +12,8 @@ from .models import (
     Statements,
     WodaDocs,
     StatementLogs,
-    WodaLogs
+    WodaLogs,
+    Signatures,
 )
 
 from .sanitizers import Sanitize
@@ -25,7 +26,8 @@ from .serializers import (
     StatementFolderCountSerializer,
     StatementFolder2CountSerializer,
     StatementFileSerializer,
-    WodaFileSerializer
+    WodaFileSerializer,
+    SignaturesSerializer
     )
 
 
@@ -154,3 +156,9 @@ def print_and_log_woda(request):
         return Response({'message': 'Woda Document logged successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'Something Went Wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)  
+
+
+class SignatureView(viewsets.ModelViewSet):
+    queryset = Signatures.objects.all()
+    serializer_class = SignaturesSerializer
+    parser_classes = [MultiPartParser, RequestParser]

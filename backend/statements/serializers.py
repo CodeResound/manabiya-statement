@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import (
     Statements,  
     WodaDocs,
+    Signatures
 )
 
 class StatementsSerializer(serializers.ModelSerializer):
@@ -49,3 +50,7 @@ class WodaFileSerializer(serializers.ModelSerializer):
         fields = ('id','file_name','type')
 
 
+class SignaturesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Signatures
+        fields = '__all__'

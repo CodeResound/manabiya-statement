@@ -18,4 +18,7 @@ urlpatterns = [
     path('woda/file/', views.WodaDocView.as_view({'get':'get_file_names_for_folder'}), name='woda-file'),
     path('woda/recent/',views.WodaDocView.as_view({'get':'get_recent_wodadoc'}), name='woda-recent'),
     path('woda/print/', views.print_and_log_woda, name='save-woda'),
+
+    path('signature/', views.SignatureView.as_view({'post':'create', 'get':'list'}), name='signature'),
+    path('signature/<int:pk>/', views.SignatureView.as_view({'get':'retrieve','patch':'partial_update','delete':'destroy'}), name='signature-ind'),
 ]

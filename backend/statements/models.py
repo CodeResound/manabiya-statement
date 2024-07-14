@@ -48,3 +48,12 @@ class WodaLogs(DateTimeModel):
 
     class Meta:
         db_table = 'wodadocs_logs'
+
+
+class Signatures(DateTimeModel):
+    set = models.CharField(max_length=255)
+    template = models.CharField(max_length=255)
+    value = models.CharField(max_length=1000)
+    class Meta:
+        db_table = 'signatures'
+        
