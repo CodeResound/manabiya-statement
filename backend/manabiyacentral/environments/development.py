@@ -24,9 +24,13 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'manabiyacentral.middlewares.auth_token.JWTAuthentication'
+    ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
@@ -78,6 +82,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'Authorization',
     'Content-Type',
+    'XAuthorization'
 ]
 CORS_ALLOW_METHODS = [
     'GET',
@@ -86,6 +91,10 @@ CORS_ALLOW_METHODS = [
     'PATCH',
     'DELETE',
     'OPTIONS',
+]
+
+CORS_EXPOSE_HEADERS = [
+    'XAuthorization'
 ]
 
 

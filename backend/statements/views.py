@@ -30,6 +30,7 @@ from .serializers import (
     SignaturesSerializer
     )
 
+from manabiyacentral.middlewares.auth_token import JWTAuthentication
 
 class StatementView(viewsets.ModelViewSet):
     queryset = Statements.objects.all()
@@ -162,3 +163,4 @@ class SignatureView(viewsets.ModelViewSet):
     queryset = Signatures.objects.all()
     serializer_class = SignaturesSerializer
     parser_classes = [MultiPartParser, RequestParser]
+    authentication_classes = [JWTAuthentication]

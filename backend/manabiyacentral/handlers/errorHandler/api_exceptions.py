@@ -5,7 +5,7 @@ class BaseCustomException(APIException):
     def __init__(self, detail, code):
         super().__init__(detail, code)
         self.detail = detail
-        self.code = code
+        self.status_code = code
 
 
 class SerializerException(BaseCustomException):
@@ -123,3 +123,18 @@ class TokenBackendError(BaseCustomException):
         detail = detail or "Token Backend Error. Please Contact Support."
         code = code or status.HTTP_500_INTERNAL_SERVER_ERROR
         super().__init__(detail, code)
+
+
+class AuthenticationError(BaseCustomException):
+    def __init__(self, detail=None, code=None):
+        detail = detail or "Authentication Error. Please Contact Support."
+        code = code or status.HTTP_401_UNAUTHORIZED
+        super().__init__(detail, code)
+
+
+class AccessTokenExpiredError(BaseCustomException):
+    def __init__(self, detail=None, code=None):
+        detail = detail or "Token Expired"
+        code = code or status.HTTP_401_UNAUTHORIZED
+        super().__init__(detail, code)
+
