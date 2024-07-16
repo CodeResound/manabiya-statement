@@ -6,6 +6,5 @@ urlpatterns = [
     path('users/<str:pk>/', views.UsersView.as_view({'patch':'partial_update','delete':'destroy'}), name='users-ind'),
 
     path('login/', views.Login.as_view(), name='login'),
-    path('refresh/token/', views.RefreshToken.as_view(), name='refresh-token'),
-    path('logout/',views.Logout.as_view(), name='logout'),
+    path('refresh/token/', views.RefreshToken.as_view(), name='refresh-token'),  
 ]
