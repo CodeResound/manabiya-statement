@@ -3,7 +3,9 @@ from rest_framework import serializers
 from .models import (
     Statements,  
     WodaDocs,
-    Signatures
+    Signatures,
+    StatementLogs,
+    WodaLogs
 )
 
 class StatementsSerializer(serializers.ModelSerializer):
@@ -54,3 +56,15 @@ class SignaturesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Signatures
         fields = '__all__'
+
+
+class StatementLogsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatementLogs
+        fields = '__all__'
+
+class WodaLogsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WodaLogs
+        fields = '__all__'
+        

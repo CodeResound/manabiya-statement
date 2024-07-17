@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
+from rest_framework.decorators import action
 
 from django.db.models import Count
 
@@ -27,7 +28,9 @@ from .serializers import (
     StatementFolder2CountSerializer,
     StatementFileSerializer,
     WodaFileSerializer,
-    SignaturesSerializer
+    SignaturesSerializer,
+    StatementLogsSerializer,
+    WodaLogsSerializer
     )
 
 from manabiyacentral.middlewares.auth_token import JWTAuthentication
@@ -164,3 +167,35 @@ class SignatureView(viewsets.ModelViewSet):
     serializer_class = SignaturesSerializer
     parser_classes = [MultiPartParser, RequestParser]
     authentication_classes = [JWTAuthentication]
+
+
+class StatementLogsView(viewsets.ModelViewSet):
+    queryset = StatementLogs.objects.all()
+    serializer_class = StatementLogsSerializer
+    parser_classes = [RequestParser, MultiPartParser]
+
+    @action(detail=False, methods=['get'])
+    def find_by_statement_id(self, request):
+        statement_id = request.query_params.get('statement_id')
+        if not statement_id:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        
+        logs = StatementLogs.objects.filter(statement_id=statement_id)
+        serializer = self.get_serializer(logs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class WodaLogsView(viewsets.ModelViewSet):
+    queryset = WodaLogs.objects.all()
+    serializer_class = WodaLogsSerializer
+    parser_classes = [RequestParser, MultiPartParser]
+
+    @action(detail=False, methods=['get'])
+    def find_by_woda_id(self, request):
+        wodadoc_id = request.query_params.get('wodadoc_id')
+        if not wodadoc_id:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        
+        logs = WodaLogs.objects.filter(wodadoc_id=wodadoc_id)
+        serializer = self.get_serializer(logs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
