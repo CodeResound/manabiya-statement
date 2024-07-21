@@ -1,6 +1,6 @@
 import datetime
-from typing import Any, Optional, Set, Tuple, TypeVar
-from django.db import transaction
+from typing import Any, Optional
+from django.conf import settings
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -81,13 +81,17 @@ class Login(APIView):
         access_token = token.encode(payload,'access')
         refresh_token = token.encode(payload,'refresh')
 
+        secure = settings.SESSION_COOKIE_SECURE
+        httponly = settings.SESSION_COOKIE_HTTPONLY
+        samesite = settings.SESSION_COOKIE_SAMESITE
+
         response = Response({'access_token':access_token,'message':'Login Successful'}, status=status.HTTP_200_OK)
         response.set_cookie(
         key='refresh_token',
         value=refresh_token,
-        httponly=True,
-        secure=False, 
-        samesite='None'  
+        httponly=httponly,
+        secure=secure, 
+        samesite=samesite  
     )
         return response
 

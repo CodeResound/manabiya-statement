@@ -1,15 +1,11 @@
 import os
-import base64
-import json
 
 from datetime import timedelta
-from collections.abc import Iterable
 
 import jwt
 from jwt import InvalidTokenError
 
-from typing import Optional, Dict, Any
-from django.conf import settings
+from typing import Dict, Any
 from .utils import (
    aware_utcnow,
    datetime_to_epoch
@@ -25,8 +21,8 @@ class TokenBackend:
         self.issuer = os.getenv('TOKEN_ISSUER', None)
         self.leeway = timedelta(seconds=30)
         self.json_encoder = None
-        self.access_token_expiry = timedelta(minutes=2)
-        self.refresh_token_expiry = timedelta(days=1)
+        self.access_token_expiry = timedelta(minutes=1)
+        self.refresh_token_expiry = timedelta(days=2)
 
     
     def get_leeway(self) -> timedelta:

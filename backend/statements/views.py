@@ -5,7 +5,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.decorators import action
 
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from manabiyacentral.middlewares.parsers import RequestParser
 
@@ -34,6 +34,8 @@ from .serializers import (
     )
 
 from manabiyacentral.middlewares.auth_token import JWTAuthentication
+from manabiyacentral.handlers.errorHandler.api_exceptions import NotFound
+from manabiyacentral.middlewares.pagination import CustomPagination
 
 class StatementView(viewsets.ModelViewSet):
     queryset = Statements.objects.all()
@@ -126,8 +128,11 @@ class WodaDocView(viewsets.ModelViewSet):
 def print_and_log_statement(request):
     try:
         statement_id = request.data.get('statement_id')
-        statement = Statements.objects.get(id=statement_id)
-
+        try:
+            statement = Statements.objects.get(id=statement_id)
+        except Statements.DoesNotExist:
+            raise NotFound()
+        
         StatementLogs.objects.create(
             statement=statement,
             folder_name1=statement.folder_name1,
@@ -146,8 +151,11 @@ def print_and_log_statement(request):
 def print_and_log_woda(request):
     try:
         wodadoc_id = request.data.get('wodadoc_id')
-        wodadoc = WodaDocs.objects.get(id=wodadoc_id)
-
+        try:
+            wodadoc = WodaDocs.objects.get(id=wodadoc_id)
+        except WodaDocs.DoesNotExist:
+            raise NotFound()
+        
         WodaLogs.objects.create(
             wodadoc=wodadoc,
             folder_name1=wodadoc.folder_name1,
@@ -169,7 +177,7 @@ class SignatureView(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
 
-class StatementLogsView(viewsets.ModelViewSet):
+class  StatementLogsView(viewsets.ModelViewSet):
     queryset = StatementLogs.objects.all()
     serializer_class = StatementLogsSerializer
     parser_classes = [RequestParser, MultiPartParser]
@@ -199,3 +207,4 @@ class WodaLogsView(viewsets.ModelViewSet):
         logs = WodaLogs.objects.filter(wodadoc_id=wodadoc_id)
         serializer = self.get_serializer(logs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
