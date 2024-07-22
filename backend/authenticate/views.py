@@ -19,6 +19,7 @@ from .models import Users
 from .serializers import (
     LoginSerializer,
     UsersSerializer,
+    UsersListSerializer
 )
 
 from .backend import TokenBackend
@@ -27,6 +28,19 @@ class UsersView(viewsets.ModelViewSet):
     queryset = Users.objects.all()
     serializer_class = UsersSerializer
     parser_classes = [MultiPartParser, RequestParser]
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return UsersListSerializer
+        return UsersSerializer
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception =True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        list_serializer = UsersListSerializer(serializer.instance)
+        return Response(list_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class Login(APIView):
@@ -41,8 +55,9 @@ class Login(APIView):
         except Users.DoesNotExist:
             raise LoginException('Unable To Login. Invalid Credentials.')
         
+        print(user.status)
         if user.status is False:
-            raise LoginException('For Security Purpose, Your Account is Currently Suspended. Please Contact Support')
+            raise LoginException(f'{user.status}')
         
         if user.login_attempts > 4:
             login_attempts = user.login_attempts

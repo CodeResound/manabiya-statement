@@ -5,6 +5,7 @@ from manabiyacentral.utility.helpers import Argon2
 from .models import Users
 
 class UsersSerializer(serializers.ModelSerializer):
+    status = serializers.BooleanField(required=False, default=True)
     
     def validate_password(self, value):
         regex = r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$"
@@ -17,6 +18,12 @@ class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__'
+
+
+class UsersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = ['id','name','username','email','status','status_reason']
     
 
 class LoginSerializer(serializers.Serializer):

@@ -8,17 +8,13 @@ class Users(DateTimeModel):
     name = models.CharField(max_length=100)
     username = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=255, blank=False, null=False)
+    email = models.EmailField()
     last_login = models.DateTimeField(blank=True, null=True)
     session_at = models.DateTimeField(blank=True, null=True)
     login_attempts = models.SmallIntegerField(default=0, blank=True, null=True)
     cooldown_time = models.DateTimeField(blank=True, null=True)
-    status = models.BooleanField(db_default=True, default=True, blank=True)
+    status = models.BooleanField(default=True, blank=True)
     status_reason = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         db_table = 'users'
-
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-        if not self.status:
-            self.status = True
