@@ -5,8 +5,6 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.decorators import action
 
-from django.db.models import Count, Q
-
 from manabiyacentral.middlewares.parsers import RequestParser
 
 from .models import (
@@ -23,10 +21,6 @@ from .sanitizers import Sanitize
 from .serializers import (
     StatementsSerializer,
     WodaDocSerializer,
-    WodaFolderCountSerializer,
-    WodaFolder2CountSerializer,
-    StatementFolderCountSerializer,
-    StatementFolder2CountSerializer,
     StatementFileSerializer,
     WodaFileSerializer,
     SignaturesSerializer,
@@ -142,7 +136,6 @@ class SignatureView(viewsets.ModelViewSet):
     queryset = Signatures.objects.all()
     serializer_class = SignaturesSerializer
     parser_classes = [MultiPartParser, RequestParser]
-    authentication_classes = [JWTAuthentication]
 
 
 class  StatementLogsView(viewsets.ModelViewSet):

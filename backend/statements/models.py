@@ -3,7 +3,7 @@ from manabiyacentral.models import DateTimeModel
 
 
 class Folder(DateTimeModel):
-    code = models.CharField(max_length=255, unique=True, blank=True)
+    code = models.CharField(max_length=255, unique=True, blank=True, editable=False)
     name = models.CharField(max_length=50)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='child', null=True, blank=False)
 
@@ -99,7 +99,8 @@ class WodaLogs(DateTimeModel):
 class Signatures(DateTimeModel):
     set = models.CharField(max_length=255)
     template = models.CharField(max_length=255)
-    value = models.CharField(max_length=1000)
+    value = models.CharField(max_length=512)
     class Meta:
         db_table = 'signatures'
+        unique_together = ('template','value')
         

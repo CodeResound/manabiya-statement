@@ -9,16 +9,52 @@ from .models import (
     Folder
 )
 
+class StatementListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Statements
+        fields = [
+            'id',
+            'name',
+            'bank',
+            'type'
+        ]
+
+
+class WodaDocListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WodaDocs
+        fields = [
+            'id',
+            'name',
+            'type',
+            'municipality'
+        ]
+
 class FolderSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField(read_only=True)  
+    statements = serializers.SerializerMethodField(read_only=True)
+    wodadoc = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Folder
-        fields = ['id','name','code','parent','children']
+        fields = ['id','name','code','parent','children','statements','wodadoc']
 
     def get_children(self, obj):
         children = Folder.objects.filter(parent=obj)
         return FolderSerializer(children, many=True).data
     
+    def validate_parent(self, value):
+        if value is None:
+            raise serializers.ValidationError('Parent Field Cannot be Null.')
+        return value
+    
+    def get_statements(self, obj):
+        statements = Statements.objects.filter(folder=obj)
+        return StatementListSerializer(statements, many=True).data
+    
+    def get_wodadoc(self, obj):
+        wodadoc = WodaDocs.objects.filter(folder=obj)
+        return WodaDocListSerializer(wodadoc, many=True).data
 
 
 class StatementsSerializer(serializers.ModelSerializer):
