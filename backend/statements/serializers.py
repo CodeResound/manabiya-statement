@@ -5,8 +5,21 @@ from .models import (
     WodaDocs,
     Signatures,
     StatementLogs,
-    WodaLogs
+    WodaLogs,
+    Folder
 )
+
+class FolderSerializer(serializers.ModelSerializer):
+    children = serializers.SerializerMethodField(read_only=True)  
+    class Meta:
+        model = Folder
+        fields = ['id','name','code','parent','children']
+
+    def get_children(self, obj):
+        children = Folder.objects.filter(parent=obj)
+        return FolderSerializer(children, many=True).data
+    
+
 
 class StatementsSerializer(serializers.ModelSerializer):
     class Meta:

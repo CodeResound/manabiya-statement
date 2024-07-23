@@ -7,17 +7,16 @@ class Sanitize:
     @staticmethod
     def create_statement(request):
         expected_fields = [
-            'folder_name1',
-            'folder_name2',
-            'file_name',
-            'template_json',
+            'folder',
+            'name',
+            'template',
             'type',
-            'doc_count'
+            'bank'
         ]
 
         filtered_data = SanitizeFields.filter(request=request, expected_fields=expected_fields)
 
-        template_json = filtered_data.pop('template_json', None)
+        template_json = filtered_data.pop('template', None)
 
         if template_json:
             try:
@@ -27,7 +26,7 @@ class Sanitize:
             except (json.JSONDecodeError, TypeError) as e:
                 raise SanitizerException('Template JSON Format Invalid')
             
-            filtered_data['template_json'] = template_json_dict
+            filtered_data['template'] = template_json_dict
 
         
         return filtered_data
@@ -35,17 +34,16 @@ class Sanitize:
     @staticmethod
     def create_wodadoc(request):
         expected_fields = [
-            'folder_name1',
-            'folder_name2',
-            'file_name',
-            'template_json',
+            'folder',
+            'name',
+            'template',
             'type',
-            'doc_count'
+            'municipality'
         ]
 
         filtered_data = SanitizeFields.filter(request=request, expected_fields=expected_fields)
 
-        template_json = filtered_data.pop('template_json', None)
+        template_json = filtered_data.pop('template', None)
     
         if template_json:
             try:
@@ -55,7 +53,7 @@ class Sanitize:
             except (json.JSONDecodeError, TypeError) as e:
                 raise SanitizerException('Template JSON Format Invalid')
             
-            filtered_data['template_json'] = template_json_dict
+            filtered_data['template'] = template_json_dict
 
         
         return filtered_data

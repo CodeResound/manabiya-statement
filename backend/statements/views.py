@@ -15,6 +15,7 @@ from .models import (
     StatementLogs,
     WodaLogs,
     Signatures,
+    Folder
 )
 
 from .sanitizers import Sanitize
@@ -30,12 +31,23 @@ from .serializers import (
     WodaFileSerializer,
     SignaturesSerializer,
     StatementLogsSerializer,
-    WodaLogsSerializer
+    WodaLogsSerializer,
+    FolderSerializer
     )
 
 from manabiyacentral.middlewares.auth_token import JWTAuthentication
 from manabiyacentral.handlers.errorHandler.api_exceptions import NotFound
-from manabiyacentral.middlewares.pagination import CustomPagination
+
+class FolderView(viewsets.ModelViewSet):
+    queryset = Folder.objects.all()
+    serializer_class = FolderSerializer
+    parser_classes = [RequestParser,MultiPartParser]
+
+    def list(self, request, *args, **kwargs):
+        queryset = Folder.objects.filter(parent=None)
+        serializer = self.get_serializer(queryset, many= True)
+        return Response(serializer.data)
+
 
 class StatementView(viewsets.ModelViewSet):
     queryset = Statements.objects.all()
@@ -50,27 +62,6 @@ class StatementView(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def get_distinct_folder(self, request, *args, **kwargs):
-        folder_counts = (
-            Statements.objects.values('folder_name1').annotate(count=Count('id')).order_by('folder_name1')
-        )
-        serializer = StatementFolderCountSerializer(folder_counts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def get_distinct_folder2(self, request, *args, **kwargs):
-        folder_name1 = request.query_params.get('folder_name1','')
-        folder_counts = (
-            Statements.objects.filter(folder_name1=folder_name1).values('folder_name2').annotate(count=Count('id')).order_by('folder_name2')
-        )
-        serializer = StatementFolder2CountSerializer(folder_counts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def get_file_names_for_folder(self, request):
-        folder_name = request.query_params.get('folder_name','')
-        file_names = Statements.objects.filter(folder_name2=folder_name)
-        serializer = StatementFileSerializer(file_names, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
     def get_recent_statements(self, request):
         recent_statements = (
             Statements.objects.all().order_by('-id')[:10]
@@ -93,29 +84,6 @@ class WodaDocView(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def get_distinct_folder(self, request, *args, **kwargs):
-        folder_counts = (
-            WodaDocs.objects.values('folder_name1').annotate(count=Count('id')).order_by('folder_name1')
-        )
-        serializer = WodaFolderCountSerializer(folder_counts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-    def get_distinct_folder2(self, request, *args, **kwargs):
-        folder_name1 = request.query_params.get('folder_name1','')
-        folder_counts = (
-            WodaDocs.objects.filter(folder_name1=folder_name1).values('folder_name2').annotate(count=Count('id')).order_by('folder_name2')
-        )
-        serializer = WodaFolder2CountSerializer(folder_counts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-
-    def get_file_names_for_folder(self, request):
-        folder_name = request.query_params.get('folder_name','') 
-        file_names = WodaDocs.objects.filter(folder_name2=folder_name)
-        serializer = WodaFileSerializer(file_names, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def get_recent_wodadoc(self, request):
         recent_wodadoc = (
             WodaDocs.objects.all().order_by('-id')[:10]
@@ -135,11 +103,11 @@ def print_and_log_statement(request):
         
         StatementLogs.objects.create(
             statement=statement,
-            folder_name1=statement.folder_name1,
-            folder_name2=statement.folder_name2,
-            file_name=statement.file_name,
-            template_json=statement.template_json,
-            doc_count=statement.doc_count
+            folder = statement.folder,
+            name=statement.name,
+            template=statement.template,
+            type = statement.type,
+            bank = statement.bank
         )
         
         return Response({'message': 'Statement logged successfully'}, status=status.HTTP_201_CREATED)
@@ -158,11 +126,11 @@ def print_and_log_woda(request):
         
         WodaLogs.objects.create(
             wodadoc=wodadoc,
-            folder_name1=wodadoc.folder_name1,
-            folder_name2=wodadoc.folder_name2,
-            file_name=wodadoc.file_name,
-            template_json=wodadoc.template_json,
-            doc_count=wodadoc.doc_count
+            folder = wodadoc.folder,
+            name=wodadoc.name,
+            template=wodadoc.template,
+            type = wodadoc.type,
+            municipality = wodadoc.municipality
         )
         
         return Response({'message': 'Woda Document logged successfully'}, status=status.HTTP_201_CREATED)
