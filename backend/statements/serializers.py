@@ -30,6 +30,17 @@ class WodaDocListSerializer(serializers.ModelSerializer):
             'municipality'
         ]
 
+class FolderListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Folder
+        fields = [
+            'id',
+            'name',
+            'code',
+            'parent',
+        ]
+
+
 class FolderSerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField(read_only=True)  
     statements = serializers.SerializerMethodField(read_only=True)
@@ -41,7 +52,7 @@ class FolderSerializer(serializers.ModelSerializer):
 
     def get_children(self, obj):
         children = Folder.objects.filter(parent=obj)
-        return FolderSerializer(children, many=True).data
+        return FolderListSerializer(children, many=True).data
     
     def validate_parent(self, value):
         if value is None:
@@ -63,20 +74,10 @@ class StatementsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class StatementFolderCountSerializer(serializers.Serializer):
-    folder_name1 = serializers.CharField()
-    count = serializers.IntegerField()
-
-
-class StatementFolder2CountSerializer(serializers.Serializer):
-    folder_name2 = serializers.CharField()
-    count = serializers.IntegerField()
-
-
 class StatementFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Statements
-        fields = ('id','file_name','type')
+        fields = ('id','name','type')
 
 
 class WodaDocSerializer(serializers.ModelSerializer):
@@ -84,21 +85,12 @@ class WodaDocSerializer(serializers.ModelSerializer):
         model = WodaDocs
         fields  = '__all__'
 
-        
-class WodaFolderCountSerializer(serializers.Serializer):
-    folder_name1 = serializers.CharField()
-    count = serializers.IntegerField()
-
-
-class WodaFolder2CountSerializer(serializers.Serializer):
-    folder_name2 = serializers.CharField()
-    count = serializers.IntegerField()
-
+    
 
 class WodaFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = WodaDocs
-        fields = ('id','file_name','type')
+        fields = ('id','name','type')
 
 
 class SignaturesSerializer(serializers.ModelSerializer):

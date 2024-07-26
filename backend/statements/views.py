@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import api_view
 from rest_framework.decorators import action
+from django.db.models import Q
 
 from manabiyacentral.middlewares.parsers import RequestParser
 
@@ -26,11 +27,14 @@ from .serializers import (
     SignaturesSerializer,
     StatementLogsSerializer,
     WodaLogsSerializer,
-    FolderSerializer
+    FolderSerializer,
+    StatementListSerializer,
+    WodaDocListSerializer
     )
 
-from manabiyacentral.middlewares.auth_token import JWTAuthentication
 from manabiyacentral.handlers.errorHandler.api_exceptions import NotFound
+from manabiyacentral.middlewares.pagination import CustomPagination
+
 
 class FolderView(viewsets.ModelViewSet):
     queryset = Folder.objects.all()
@@ -138,7 +142,7 @@ class SignatureView(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, RequestParser]
 
 
-class  StatementLogsView(viewsets.ModelViewSet):
+class StatementLogsView(viewsets.ModelViewSet):
     queryset = StatementLogs.objects.all()
     serializer_class = StatementLogsSerializer
     parser_classes = [RequestParser, MultiPartParser]
@@ -169,3 +173,54 @@ class WodaLogsView(viewsets.ModelViewSet):
         serializer = self.get_serializer(logs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+
+class SearchStatementView(viewsets.ModelViewSet):
+    queryset = Statements.objects.all()
+    serializer_class = StatementListSerializer
+    pagination_class = CustomPagination
+
+    def search(self, request, *args, **kwargs):
+        query = request.query_params.get('query','')
+
+        if not query:
+            return Response({}, status=status.HTTP_200_OK)
+        
+        statement_queryset = Statements.objects.filter(
+            Q(name__icontains=query) |
+            Q(bank__icontains=query)
+        ).distinct().order_by('id')
+
+        page = self.paginate_queryset(statement_queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(statement_queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class SearchWodaDocView(viewsets.ModelViewSet):
+    queryset = WodaDocs.objects.all()
+    serializer_class = WodaDocListSerializer
+    pagination_class = CustomPagination
+
+    def search(self, request, *args, **kwargs):
+        query = request.query_params.get('query', '')
+
+        if not query:
+            return Response({}, status=status.HTTP_200_OK)
+        
+        wodadoc_queryset = WodaDocs.objects.filter(
+            Q(name__icontains=query) |
+            Q(municipality__icontains=query)
+        ).distinct().order_by('id')
+
+        page = self.paginate_queryset(wodadoc_queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(wodadoc_queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        

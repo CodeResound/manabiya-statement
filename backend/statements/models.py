@@ -104,3 +104,4 @@ class Signatures(DateTimeModel):
         db_table = 'signatures'
         unique_together = ('template','value')
         
+

@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('statement/', views.StatementView.as_view({'post':'create','get':'list'}), name='statement'),
+    path('statement/', views.StatementView.as_view({'post':'create'}), name='statement'),
     path('statement/<int:pk>/', views.StatementView.as_view({'get':'retrieve','patch':'partial_update','delete':'destroy'}), name='statement-ind'),
     path('statement/recent/',views.StatementView.as_view({'get':'get_recent_statements'}), name='statement-recent'),
     path('statement/print/', views.print_and_log_statement, name='save-statement'),
@@ -11,7 +11,7 @@ urlpatterns = [
     path('statement/logs/filter/', views.StatementLogsView.as_view({'get':'find_by_statement_id'}), name='statement-logs-filter'),
 
 
-    path('woda/', views.WodaDocView.as_view({'post':'create','get':'list'}), name='woda'),
+    path('woda/', views.WodaDocView.as_view({'post':'create'}), name='woda'),
     path('woda/<int:pk>/', views.WodaDocView.as_view({'get':'retrieve','patch':'partial_update', 'delete':'destroy'}), name='woda-doc-ind'),
     path('woda/recent/',views.WodaDocView.as_view({'get':'get_recent_wodadoc'}), name='woda-recent'),
     path('woda/print/', views.print_and_log_woda, name='save-woda'),
@@ -24,4 +24,7 @@ urlpatterns = [
 
     path('folder/', views.FolderView.as_view({'post':'create', 'get':'list'}), name='folder'),
     path('folder/<int:pk>/', views.FolderView.as_view({'get':'retrieve', 'patch':'partial_update','delete':'destroy'}), name='folder-ind'),
+
+    path('search/statement/', views.SearchStatementView.as_view({'get':'search'}), name='statement-search'),
+    path('search/wodadoc/', views.SearchWodaDocView.as_view({'get':'search'}), name='wodadoc-search'),
 ]
