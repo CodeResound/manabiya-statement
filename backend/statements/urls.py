@@ -25,6 +25,6 @@ urlpatterns = [
     path('folder/', views.FolderView.as_view({'post':'create', 'get':'list'}), name='folder'),
     path('folder/<int:pk>/', views.FolderView.as_view({'get':'retrieve', 'patch':'partial_update','delete':'destroy'}), name='folder-ind'),
 
-    path('search/statement/', views.SearchStatementView.as_view({'get':'search'}), name='statement-search'),
-    path('search/wodadoc/', views.SearchWodaDocView.as_view({'get':'search'}), name='wodadoc-search'),
+    path('search/statement', views.SearchStatementView.as_view({'get':'search'}), name='statement-search'),
+    path('search/wodadoc', views.SearchWodaDocView.as_view({'get':'search'}), name='wodadoc-search'),
 ]

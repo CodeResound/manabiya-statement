@@ -27,9 +27,9 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    #'DEFAULT_AUTHENTICATION_CLASSES':[
-    #    'manabiyacentral.middlewares.auth_token.JWTAuthentication'
-    #],
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'manabiyacentral.middlewares.auth_token.JWTAuthentication'
+    ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],

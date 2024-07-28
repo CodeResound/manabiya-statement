@@ -21,8 +21,8 @@ class TokenBackend:
         self.issuer = os.getenv('TOKEN_ISSUER', None)
         self.leeway = timedelta(seconds=30)
         self.json_encoder = None
-        self.access_token_expiry = timedelta(minutes=1)
-        self.refresh_token_expiry = timedelta(days=2)
+        self.access_token_expiry = timedelta(minutes=15)
+        self.refresh_token_expiry = timedelta(days=1)
 
     
     def get_leeway(self) -> timedelta:
