@@ -55,7 +55,6 @@ class Login(APIView):
         except Users.DoesNotExist:
             raise LoginException('Unable To Login. Invalid Credentials.')
         
-        print(user.status)
         if user.status is False:
             raise LoginException(f'{user.status}')
         
