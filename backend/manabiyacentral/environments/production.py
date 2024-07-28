@@ -13,11 +13,6 @@ ALLOWED_HOSTS = [
     os.getenv("ALLOWEDHOST2"),
     os.getenv("ALLOWEDHOST3"),
     os.getenv("ALLOWEDHOST4"),
-    os.getenv("ALLOWEDHOST5"),
-    os.getenv("ALLOWEDHOST6"),
-    os.getenv("ALLOWEDHOST7"),
-    os.getenv("ALLOWEDHOST8"),
-    os.getenv("ALLOWEDHOST9"),
 ]
 
 
@@ -29,8 +24,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -78,36 +73,27 @@ WSGI_APPLICATION = 'manabiyacentral.wsgi.application'
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-SESSION_COOKIE_HTTPONLY=True
-CSRF_COOKIE_HTTPONLY=True
-CSRF_COOKIE_SECURE=True
-SESSION_COOKIE_SAMESITE='Strict'
-CSRF_COOKIE_SAMESITE='Strict'
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+X_FRAME_OPTIONS = 'DENY'
+X_CONTENT_TYPE_OPTIONS = 'nosniff'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [
-    os.getenv('ALLOWEDORIGIN1'),
-    os.getenv('ALLOWEDORIGIN2'),
-    os.getenv('ALLOWEDORIGIN3'),
-    os.getenv('ALLOWEDORIGIN4'),
-    os.getenv('ALLOWEDORIGIN5'),
-    os.getenv('ALLOWEDORIGIN6'),
-    os.getenv('ALLOWEDORIGIN7'),
-    os.getenv('ALLOWEDORIGIN8'),
-    os.getenv('ALLOWEDORIGIN9'),
+CORS_ALLOWED_ORIGINS = [
+    'https://docs.manabiyanepal.com.np',
+    'https://vdocs.manabiyanepal.com.np',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -140,10 +126,7 @@ CORS_EXPOSE_HEADERS = [
     'Set-Cookie',
 ]
 
-SESSION_COOKIE_SECURE=True
-SESSION_COOKIE_HTTPONLY=True
-SESSION_COOKIE_SAMESITE='Strict'
-CSRF_COOKIE_SECURE = True
+
 
 
 
