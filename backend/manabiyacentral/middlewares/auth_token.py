@@ -1,19 +1,12 @@
-from typing import Any, Optional, Set, Tuple, TypeVar
-
-from django.utils.deprecation import MiddlewareMixin
-from rest_framework.response import Response
+from typing import Any, Optional, Set, Tuple
 
 from authenticate.models import Users
 from rest_framework import HTTP_HEADER_ENCODING, authentication
 from rest_framework.request import Request
 
 from authenticate.backend import TokenBackend
-from manabiyacentral.handlers.errorHandler.api_exceptions import InvalidToken, TokenBackendError, AuthenticationError, NotFound
+from manabiyacentral.handlers.errorHandler.api_exceptions import InvalidToken, AuthenticationError, NotFound
 
-from authenticate.utils import (
-    aware_utcnow,
-    datetime_to_epoch
-)
 
 AUTH_HEADER_TYPES = ("Kilimanjaro",)
 
@@ -34,7 +27,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request:Request)-> Optional[Tuple[Users, str]]:
         header = self.get_header(request)
-
+    
         if header is None:
             raise AuthenticationError('Unable to Process Your Request. Error: Missing Authentication Headers.')
 
